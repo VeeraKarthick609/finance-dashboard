@@ -109,6 +109,15 @@ def update_record(record_id: str, data: dict) -> dict:
     return _record_response(response.data[0])
 
 
+def bulk_create_records(records: list[dict], user_id: str) -> list[dict]:
+    records_data = [
+        {**r, "date": str(r["date"]), "user_id": user_id}
+        for r in records
+    ]
+    response = supabase.table("records").insert(records_data).execute()
+    return [_record_response(r) for r in response.data]
+
+
 def soft_delete_record(record_id: str) -> dict:
     get_record(record_id)
 

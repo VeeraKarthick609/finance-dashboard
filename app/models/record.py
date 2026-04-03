@@ -22,6 +22,10 @@ class UpdateRecordRequest(BaseModel):
     notes: Optional[str] = Field(None, max_length=500)
 
 
+class BulkCreateRequest(BaseModel):
+    records: list[CreateRecordRequest] = Field(min_length=1, max_length=500)
+
+
 # --- Response schemas ---
 
 class RecordResponse(BaseModel):

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 
 from app.dependencies import get_current_user, require_role
-from app.models.record import CreateRecordRequest, UpdateRecordRequest
+from app.models.record import CreateRecordRequest, UpdateRecordRequest, BulkCreateRequest
 from app.services import record_service
 
 router = APIRouter()
@@ -24,6 +24,17 @@ async def list_records(
         page, limit, type, category, start_date, end_date, search, sort_by, order
     )
     return {"success": True, **result}
+
+
+@router.post("/bulk", status_code=201)
+async def bulk_create_records(
+    body: BulkCreateRequest,
+    current_user: dict = Depends(require_role("admin")),
+):
+    records = record_service.bulk_create_records(
+        [r.model_dump() for r in body.records], current_user["id"]
+    )
+    return {"success": True, "data": records, "message": f"{len(records)} records created"}
 
 
 @router.get("/{record_id}")
