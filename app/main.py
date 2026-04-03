@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.exceptions import AppError, app_error_handler, generic_error_handler
-from app.routers import auth, users, records
+from app.routers import auth, users, records, dashboard
 
 app = FastAPI(
     title="Finance Dashboard API",
@@ -27,6 +27,7 @@ app.add_exception_handler(Exception, generic_error_handler)
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(records.router, prefix="/api/records", tags=["Records"])
+app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
 
 
 @app.get("/")
